@@ -8,15 +8,15 @@ contract SimpleVoting is Ownable {
     event VoteReset(uint256 yesVotes, uint256 noVotes);
     uint256 yesVotes;
     uint256 noVotes;
-    uint256 startTime;
-    uint256 endTime;
+    uint256 public startTime;
+    uint256 public endTime;
     mapping(address => bool) hasVoted;
     mapping(address => bool) userVote;
     address[] private voterAddresses;
 
     modifier onlyAfterVoting() {
-    require(block.timestamp > endTime, "Voting is ongoing.");
-    _;
+        require(block.timestamp >= endTime, "Voting is ongoing.");
+        _;
     }
 
     modifier onlyVotingPeriod() {
@@ -25,7 +25,10 @@ contract SimpleVoting is Ownable {
         _;
     }
 
-    constructor(uint256 _startAfter, uint256 _durationInSeconds) Ownable(msg.sender) {
+    constructor(
+        uint256 _startAfter,
+        uint256 _durationInSeconds
+    ) Ownable(msg.sender) {
         require(_durationInSeconds > 0, "Duration must be positive");
         startTime = block.timestamp + _startAfter;
         endTime = startTime + _durationInSeconds;
@@ -60,7 +63,7 @@ contract SimpleVoting is Ownable {
 
     function getWinner() external view onlyAfterVoting returns (string memory) {
         if (yesVotes > noVotes) {
-            return "Yes votes have won";
+            return "Yes votes have won.";
         } else if (noVotes > yesVotes) {
             return "No votes have won.";
         } else {
@@ -76,20 +79,27 @@ contract SimpleVoting is Ownable {
         return noVotes;
     }
 
-    function getParticipationRate() external view onlyAfterVoting returns (uint256 _yesRate, uint256 _noRate)  {
+    function getParticipationRate()
+        external
+        view
+        onlyAfterVoting
+        returns (uint256 _yesRate, uint256 _noRate)
+    {
         uint256 totalVotes = yesVotes + noVotes;
         _yesRate = (yesVotes * 100) / totalVotes;
         _noRate = (noVotes * 100) / totalVotes;
 
-        if (voterAddresses.length > 0)
-            return (_yesRate, _noRate);
+        if (voterAddresses.length > 0) return (_yesRate, _noRate);
     }
 
     function endVoteManually() external onlyOwner {
         endTime = block.timestamp;
     }
 
-    function resetVote(uint256 _startTime, uint256 _durationInSeconds) external onlyOwner onlyAfterVoting {
+    function resetVote(
+        uint256 _startAfter,
+        uint256 _durationInSeconds
+    ) external onlyOwner onlyAfterVoting {
         require(_durationInSeconds > 0, "Duration must be positive");
         emit VoteReset(yesVotes, noVotes);
 
@@ -97,14 +107,13 @@ contract SimpleVoting is Ownable {
         noVotes = 0;
 
         for (uint i = 0; i < voterAddresses.length; i++) {
-        address voter = voterAddresses[i];
-        delete hasVoted[voter];
-        delete userVote[voter];
+            address voter = voterAddresses[i];
+            delete hasVoted[voter];
+            delete userVote[voter];
         }
         delete voterAddresses;
 
-        startTime = block.timestamp+_startTime;
+        startTime = block.timestamp + _startAfter;
         endTime = startTime + _durationInSeconds;
-
     }
 }

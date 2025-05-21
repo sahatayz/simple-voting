@@ -1,0 +1,30 @@
+{
+  "name": "simple-voting",
+  "version": "1.0.0",
+  "description": "I can also finish you.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sahatayz/simple-voting.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sahatayz/simple-voting/issues"
+  },
+  "homepage": "https://github.com/sahatayz/simple-voting#readme",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "chai": "^4.5.0",
+    "hardhat": "^2.24.0",
+    "mocha": "^11.2.2"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.3.0"
+  }
+}
