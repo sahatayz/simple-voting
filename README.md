@@ -22,8 +22,9 @@ A smart contract-based voting system written in Solidity with automated testing 
 
 ```solidity
 constructor(uint256 _startDelay, uint256 _duration)
-
+```
 Key Functions
+```solidity
 vote(bool _choice) – Cast a vote
 
 getYesCount() – Get number of "yes" votes
